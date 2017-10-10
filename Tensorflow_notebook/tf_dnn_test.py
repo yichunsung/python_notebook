@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Oct  8 15:01:01 2017
-
-@author: Sung
-"""
 
 import tensorflow as tf
 from  tensorflow.examples.tutorials.mnist import input_data
@@ -11,25 +5,36 @@ mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
 
 
 # Buliding add_layer function
-def add_layer(inputs, in_size, out_size, activation_function=None):
+def add_Hidden_layer(inputs, in_size, out_size, activation_function=None):
     # add one more layer and return the output of this layer
     Weights = tf.Variable(tf.random_normal([in_size, out_size]))
     biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
     Wx_plus_b = tf.matmul(inputs, Weights) + biases
+    # dropout
     Wx_plus_b = tf.nn.dropout(Wx_plus_b, keep_prob)
     if activation_function is None:
         outputs = Wx_plus_b
     else:
         outputs = activation_function(Wx_plus_b)
     return outputs
-
+    
+def add_output_layer(inputs, in_size, out_size, activation_function=None):
+    # add one more layer and return the output of this layer
+    Weights = tf.Variable(tf.random_normal([in_size, out_size]))
+    biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
+    Wx_plus_b = tf.matmul(inputs, Weights) + biases
+    if activation_function is None:
+        outputs = Wx_plus_b
+    else:
+        outputs = activation_function(Wx_plus_b)
+    return outputs
 # Buliding Accuracy function
 def compute_accuracy(v_xs, v_ys):
     global output_Layer
-    y_pre = sess.run(output_Layer, feed_dict={xs: v_xs})
+    y_pre = sess.run(output_Layer, feed_dict={xs: v_xs, keep_prob: 1})
     correct_prediction = tf.equal(tf.argmax(y_pre,1), tf.argmax(v_ys,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-    result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys})
+    result = sess.run(accuracy, feed_dict={xs: v_xs, ys: v_ys, keep_prob:1})
     return result
 
 # PlaceHolder
@@ -43,11 +48,11 @@ ys = tf.placeholder(tf.float32, [None, 10])
 # Step 1 activation function = softmax
 
 ## Hidden layer 1
-hidden_Layer1 = add_layer(xs, 784, 50, activation_function = tf.nn.sigmoid)
+hidden_Layer1 = add_Hidden_layer(xs, 784, 50, activation_function = tf.nn.tanh)
 ## Hidden layer 2
-hidden_Layer2 = add_layer(hidden_Layer1, 50, 30, activation_function = tf.nn.sigmoid)
+hidden_Layer2 = add_Hidden_layer(hidden_Layer1, 50, 40, activation_function = tf.nn.tanh)
 ## Add output layer
-output_Layer = add_layer(hidden_Layer2, 30, 10, activation_function = tf.nn.softmax)
+output_Layer = add_output_layer(hidden_Layer2, 40, 10, activation_function = tf.nn.softmax)
 
 # Step 2 loss error method(loss function) = cross entropy
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(output_Layer),
@@ -67,5 +72,6 @@ for i in range(1001):
     batch_xs, batch_ys =  mnist.train.next_batch(100)
     sess.run(train_step, feed_dict = {xs: batch_xs, ys:batch_ys, keep_prob:0.5})
     if i% 50 ==0:
-        print(compute_accuracy(mnist.test.images, mnist.test.labels))
+         print(compute_accuracy(mnist.test.images, mnist.test.labels))
+
 
