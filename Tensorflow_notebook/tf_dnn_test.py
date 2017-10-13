@@ -8,7 +8,8 @@ mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
 def add_Hidden_layer(inputs, in_size, out_size, activation_function=None):
     # add one more layer and return the output of this layer
     Weights = tf.Variable(tf.random_normal([in_size, out_size]))
-    biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
+    #biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
+    biases = tf.Variable(tf.constant(0.1, shape = [1, out_size]))
     Wx_plus_b = tf.matmul(inputs, Weights) + biases
     # dropout
     Wx_plus_b = tf.nn.dropout(Wx_plus_b, keep_prob)
@@ -21,7 +22,8 @@ def add_Hidden_layer(inputs, in_size, out_size, activation_function=None):
 def add_output_layer(inputs, in_size, out_size, activation_function=None):
     # add one more layer and return the output of this layer
     Weights = tf.Variable(tf.random_normal([in_size, out_size]))
-    biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
+    #biases = tf.Variable(tf.zeros([1, out_size]) + 0.1)
+    biases = tf.Variable(tf.constant(0.1, shape = [1, out_size]))
     Wx_plus_b = tf.matmul(inputs, Weights) + biases
     if activation_function is None:
         outputs = Wx_plus_b
@@ -48,9 +50,9 @@ ys = tf.placeholder(tf.float32, [None, 10])
 # Step 1 activation function = softmax
 
 ## Hidden layer 1
-hidden_Layer1 = add_Hidden_layer(xs, 784, 50, activation_function = tf.nn.tanh)
+hidden_Layer1 = add_Hidden_layer(xs, 784, 50, activation_function = tf.nn.sigmoid)
 ## Hidden layer 2
-hidden_Layer2 = add_Hidden_layer(hidden_Layer1, 50, 40, activation_function = tf.nn.tanh)
+hidden_Layer2 = add_Hidden_layer(hidden_Layer1, 50, 40, activation_function = tf.nn.sigmoid)
 ## Add output layer
 output_Layer = add_output_layer(hidden_Layer2, 40, 10, activation_function = tf.nn.softmax)
 
@@ -70,7 +72,7 @@ sess.run(init)
 
 for i in range(1001):
     batch_xs, batch_ys =  mnist.train.next_batch(100)
-    sess.run(train_step, feed_dict = {xs: batch_xs, ys:batch_ys, keep_prob:0.5})
+    sess.run(train_step, feed_dict = {xs: batch_xs, ys:batch_ys, keep_prob:1})
     if i% 50 ==0:
          print(compute_accuracy(mnist.test.images, mnist.test.labels))
 
