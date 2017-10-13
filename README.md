@@ -1,4 +1,4 @@
-# python_notebook
+# Python notebook
 
 ![](pic/pyCover.png)
 
