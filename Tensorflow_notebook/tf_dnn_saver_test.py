@@ -2,11 +2,6 @@ import tensorflow as tf
 from  tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
 
-import tensorflow as tf
-from  tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
-
-
 # Buliding add_layer function
 def add_Hidden_layer(inputs, in_size, out_size, activation_function=None):
     # add one more layer and return the output of this layer
