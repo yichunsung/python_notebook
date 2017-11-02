@@ -2,7 +2,7 @@
 ############################
 #      Input               #
 #       ↓                  #
-# Convolution layer 1      #    
+# Convolution layer 1      #
 #       ↓                  #
 # Max pooling layer 1      #
 #       ↓                  #
@@ -146,7 +146,12 @@ sess.run(init)
 # Run
 for i in range(1000):
     batch_xs, batch_ys = mnist.train.next_batch(100)
-    sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys})
+    sess.run(train_step, feed_dict={xs: mnist.test.images, ys:  mnist.test.labels})
+    #sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys})
     if i % 50 == 0:
+       #print(sess.run(cross_entropy, feed_dict={xs: batch_xs, ys: batch_ys}))
+       #print(sess.run(filter_convLayer_1, feed_dict={xs: batch_xs, ys: batch_ys}))
         print(compute_accuracy(
-            mnist.test.images[:1000], mnist.test.labels[:1000]))
+           mnist.test.images[:1000], mnist.test.labels[:1000]))
+
+#print(filter_convLayer_1)

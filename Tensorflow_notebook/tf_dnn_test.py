@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 from  tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot = True)
@@ -63,7 +62,9 @@ cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(output_Layer),
 train_step = tf.train.GradientDescentOptimizer(0.4).minimize(cross_entropy)
 
 # Step 4 Set session and initializer
+
 sess = tf.Session()
+saver = tf.train.Saver()
 init = tf.global_variables_initializer()
 sess.run(init)
 
@@ -72,8 +73,14 @@ sess.run(init)
 
 for i in range(1001):
     batch_xs, batch_ys =  mnist.train.next_batch(100)
-    sess.run(train_step, feed_dict = {xs: batch_xs, ys:batch_ys, keep_prob:1})
+    sess.run(train_step, feed_dict = {xs: batch_xs, ys:batch_ys, keep_prob:0.8})
     if i% 50 ==0:
-         print(compute_accuracy(mnist.test.images, mnist.test.labels))
+        print(compute_accuracy(mnist.test.images, mnist.test.labels))
+        
 
+
+print("=====Saver is start=====")
+saver.save(sess, '/Github_rep/python_notebook/Tensorflow_notebook/model/DnnModel_demo.ckpt')
+print("Saved")
+print("=====Saver is end=====")
 

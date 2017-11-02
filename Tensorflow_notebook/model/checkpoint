@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Github_rep/python_notebook/Tensorflow_notebook/model/DnnModel_demo.ckpt"
+all_model_checkpoint_paths: "/Github_rep/python_notebook/Tensorflow_notebook/model/DnnModel_demo.ckpt"
